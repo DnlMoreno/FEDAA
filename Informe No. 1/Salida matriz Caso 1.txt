@@ -1,0 +1,4 @@
+Tamano M1   Tamano M2		tiempoIter	tiempoIterOpt	tiempoStrassen
+100 x 100  100 x 100		0.005		0.004		0.926		 segs.
+100 x 100  100 x 100		0.004		0.004		0.911		 segs.
+100 x 100  100 x 100		0.005		0.004		0.895		 segs.
