@@ -93,8 +93,8 @@ int main(int argc, char *argv[]){
 			}
 			
 			// Se le agregan los 0 a la matriz de strassen
-			addZero(fila_M1, columnaM1_filaM2, MAX, A_strassen);
-			addZero(columnaM1_filaM2, columna_M2, MAX, B_strassen);
+			addZero(fila_M1, columnaM1_filaM2, fila_M1, A_strassen);
+			addZero(columnaM1_filaM2, columna_M2, fila_M1, B_strassen);
 			
 			// Evaluacion de los algoritmos
 			unsigned t0 = clock();
@@ -142,8 +142,8 @@ int main(int argc, char *argv[]){
 // Funciones generales
 void lecturaFile(ifstream &matriz_A, ifstream &matriz_B){
 	// Para probar con las otras distribuciones de datos se debe ir cambiando el txt de entrada
-	matriz_A.open("C:/Users/gamor/Documents/GitHub/FEDAA/Informe No. 1/Generación de datasets/Entrada algoritmos de multplicacion de matrices/Entrada matriz_rect_A_caso2.txt");
-	matriz_B.open("C:/Users/gamor/Documents/GitHub/FEDAA/Informe No. 1/Generación de datasets/Entrada algoritmos de multplicacion de matrices/Entrada matriz_rect_B_caso2.txt");
+	matriz_A.open("C:/Users/gamor/Documents/GitHub/FEDAA/Informe No. 1/Generación de datasets/Entrada algoritmos de multplicacion de matrices/Entrada matriz_cuad_A_caso2.txt");
+	matriz_B.open("C:/Users/gamor/Documents/GitHub/FEDAA/Informe No. 1/Generación de datasets/Entrada algoritmos de multplicacion de matrices/Entrada matriz_cuad_B_caso2.txt");
 }
 
 void generarMatriz(int** &matriz, int filas, int columnas, ifstream &matriz_file){
@@ -385,6 +385,13 @@ int dimentionSquare(int fila, int columna){
 	int i = 0;
 	int j = 0;
 	int pos;
+	
+	// Verifica si la dimension ya viene en potencia de 2^n
+	for(int k = 0; k<12; k++){
+		if (vect[k] == fila and fila == columna){
+			return fila;
+		}
+	}
 	
 	if (columna >= fila){
 		while (columna > n){
