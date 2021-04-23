@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
 	ifstream matriz_B;
 	
 	ofstream salida;
-    salida.open("Salida matriz Caso 1.txt", ios::out);
+    salida.open("Salida matriz Caso 2.txt", ios::out);
     
     lecturaFile(matriz_A, matriz_B);
 
@@ -142,8 +142,8 @@ int main(int argc, char *argv[]){
 // Funciones generales
 void lecturaFile(ifstream &matriz_A, ifstream &matriz_B){
 	// Para probar con las otras distribuciones de datos se debe ir cambiando el txt de entrada
-	matriz_A.open("C:/Users/gamor/Documents/GitHub/FEDAA/Informe No. 1/Generación de datasets/Entrada algoritmos de multplicacion de matrices/Entrada matriz_cuad_A_caso1.txt");
-	matriz_B.open("C:/Users/gamor/Documents/GitHub/FEDAA/Informe No. 1/Generación de datasets/Entrada algoritmos de multplicacion de matrices/Entrada matriz_cuad_B_caso1.txt");
+	matriz_A.open("C:/Users/gamor/Documents/GitHub/FEDAA/Informe No. 1/Generación de datasets/Entrada algoritmos de multplicacion de matrices/Entrada matriz_rect_A_caso2.txt");
+	matriz_B.open("C:/Users/gamor/Documents/GitHub/FEDAA/Informe No. 1/Generación de datasets/Entrada algoritmos de multplicacion de matrices/Entrada matriz_rect_B_caso2.txt");
 }
 
 void generarMatriz(int** &matriz, int filas, int columnas, ifstream &matriz_file){
