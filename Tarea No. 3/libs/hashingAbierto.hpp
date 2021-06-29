@@ -20,12 +20,15 @@ private:
     int __iniSize(int size);
 	int __divFunction(long long k);
 	int __mulFunction(long long k);
-	void __agrandar();
 
 public:
+	/***** Constructor y destructor *****/
 	HashingOpen(int size);
 	~HashingOpen();
+	int getCapacidad();
 	int getCantidad();
+
+	/***** Operaciones basicas *****/
 	bool buscar(long long k);
 	void eliminar(long long k);
     void insertar(long long k);

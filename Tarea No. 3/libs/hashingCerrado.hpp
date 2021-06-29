@@ -12,7 +12,7 @@ using namespace std;
 
 class HashingClosed{
 private:
-	long long* table; // Array de enteros
+	long long* table; // Array de long long
 	int capacidad; 
 	int cantidad;
 	float A = (sqrt(5) - 1) / 2;
@@ -23,9 +23,13 @@ private:
 	void __agrandar();
 
 public:
+	/***** Constructor y destructor *****/
 	HashingClosed(int size);
 	~HashingClosed();
 	int getCantidad();
+	int getCapacidad();
+
+	/***** Operaciones basicas *****/
 	int buscar(long long k);	// retorna posicion
 	void eliminar(long long k);
 	void insertar(long long k);	// Numeros > 0

@@ -20,6 +20,10 @@ int HashingClosed::getCantidad(){
 	return cantidad;
 }
 
+int HashingClosed::getCapacidad(){
+	return capacidad;
+}
+
 /********************************************************/
 /*******    Operaciones esenciales Tabla Hash     *******/
 /********************************************************/
@@ -39,21 +43,18 @@ int HashingClosed::buscar(long long k){
 
     // Se busca el elemento en la primera posible casilla
     if (table[pos] == k){
-        //cout << "El elemento " << k << " fue encontrado en el indice: " << pos << endl;
         return pos;
     }
 
     // Se busca el elemento en todas las posibles posiciones que pudo haber quedado en la tabla
     // Si una de las celdas que se busca esta vacia, significa que el elemento no esta en la tabla
-	while(table[pos] != DISP){        
+	while(table[pos] != DISP & table[pos] != ELIM){        
 		pos = __doubleHashing(k+i, i); 
         i++;
         if (table[pos] == k){
-            //cout << "El elemento " << k << " fue encontrado en el indice: " << pos << endl;
             return pos;
         }
 	}
-    //cout << "El elemento no se encuentra en la tabla" << endl; 
 	return DISP;
 }
 
@@ -78,7 +79,7 @@ void HashingClosed::eliminar(long long k){
 
     // Se busca el elemento en todas las posibles posiciones que pudo haber quedado en la tabla
     // Si una de las celdas que se busca esta vacia, significa que el elemento no esta en la tabla
-	while(table[pos] != DISP){        
+	while(table[pos] != DISP & table[pos] != ELIM){        
 		pos = __doubleHashing(k+i, i); 
         i++;
         if (table[pos] == k){
@@ -103,7 +104,6 @@ void HashingClosed::insertar(long long k){
 
     // Control del factor de carga, si esta muy lleno se agranda la tabla
 	if((float)cantidad/(float)capacidad > 0.7){	
-		//cout << "La tablita se esta agrandando" << endl;
         __agrandar();
 	}
 
@@ -113,13 +113,9 @@ void HashingClosed::insertar(long long k){
 
     // Mientras la posicion este ocupada se ira sondeando la tabla
 	while(table[pos] != DISP & table[pos] != ELIM){
-        //cout << "Posicion" << i << ": " << pos << endl;
-        //cout << "Ocurrio una colision en el indice " << pos << " con el elemento: " << k; 
 		pos = __doubleHashing(k+i, i);
-        //cout << " --- el elemento " << k << " se cambio a " << pos << endl; 
 		i++;
 	}
-    //cout << "El indice es " << pos << " para el elemento: " << k << endl; 
 	table[pos] = k;
 	cantidad++;
 }
@@ -179,8 +175,6 @@ void HashingClosed::__agrandar(){
 	}
 	
 	cantidad = 0;
-
-    //cout << "Temporal: " << temp << endl;
 
 	// Se reacomodan los elementos
 	for(int i = 0; i < temp; i++){

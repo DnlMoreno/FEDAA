@@ -30,14 +30,11 @@ ArbolBinarioBusqueda::~ArbolBinarioBusqueda(){
 	delete raiz;
 }
 
-int cont = 0;
-
 /*************************************************/
 /*******    Operaciones esenciales ABB     *******/
 /*************************************************/
 
 void ArbolBinarioBusqueda::insertar(long long dato){
-    //cout << "raiz: " << raiz << endl;
 	__insertar(raiz, dato, raiz);
 }
 
@@ -57,18 +54,17 @@ void ArbolBinarioBusqueda::mostrarArbol(long long contador){
 /*******    Metodos internos ABB     *******/
 /*******************************************/
 
-void ArbolBinarioBusqueda::__insertar(Nodo*& nodo, const long long dato, Nodo*& padre){
+void ArbolBinarioBusqueda::__insertar(Nodo*& nodo, long long dato, Nodo*& padre){
 	// Caso base
 	if(nodo == NULL){
-        //cout << "Caso base - Se insertar el nodo: " << dato << endl;
 		nodo = new Nodo(padre, dato); // Se inserta el dato
 	}
     // Caso recursivo
     else{
-        if(dato < nodo->info){
+        if(dato < nodo->info){ // Se va hacia el lado izquierdo
             __insertar(nodo->izq, dato, nodo);
         }
-        else{
+        else{ // Se va hacia el lado derecho
             __insertar(nodo->der, dato, nodo);
         }
     }	
@@ -77,22 +73,17 @@ void ArbolBinarioBusqueda::__insertar(Nodo*& nodo, const long long dato, Nodo*& 
 Nodo* ArbolBinarioBusqueda::__buscar(Nodo* nodo, long long dato){
 	// Caso base
 	if(nodo == NULL){	// No existe el dato
-        //cout << "Dato no existe" << endl;
 		return NULL;
 	}
 	// Casos recursivos
-	else if(dato < nodo->info){
-        //cout << "Izquierda" << endl;
+	else if(dato < nodo->info){ // Busca por la izquierda
 		return __buscar(nodo->izq, dato);
 	}
-    else if(dato > nodo->info){
-        //cout << "Derecha" << endl;
+    else if(dato > nodo->info){ // Busca por la derecha
         return __buscar(nodo->der, dato);
     }	
     // El dato se encontro
     else{
-        //cout << "El dato es: " <<  nodo->info << endl;
-        //cout << "Su padre es: " <<  nodo->padre->info << endl;
         return nodo; 
     }
 }

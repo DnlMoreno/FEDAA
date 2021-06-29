@@ -7,7 +7,6 @@
 HashingOpen::HashingOpen(int size){
     int tam = __iniSize(size);
 	capacidad = tam;
-    cantidad = 0;
     table = new list<long long>[capacidad];
 }
 
@@ -17,6 +16,10 @@ HashingOpen::~HashingOpen(){
 
 int HashingOpen::getCantidad(){
 	return cantidad;
+}
+
+int HashingOpen::getCapacidad(){
+	return capacidad;
 }
 
 /********************************************************/
@@ -47,8 +50,7 @@ bool HashingOpen::buscar(long long k){
 void HashingOpen::eliminar(long long k){
 /* Eliminación de un elemento de la tabla
     Returns:
-        Devuelve una tabla hash con el elemento eliminado, es decir, con esa la casilla vacia,
-        Si no se encuentra el elemento, se levanta un aviso
+        Devuelve una tabla hash con el elemento eliminado de la lista enlazada
                                                             */
 
     // Se obtiene el indice de la clave
@@ -72,16 +74,10 @@ void HashingOpen::insertar(long long k){
         k: Clave que se quiere insertar en la tabla hash
 
     Returns:
-        Se inserta el valor en una casilla vacia de la tabla hash
+        Se inserta el valor en la lista enlazada correspondiente a la casilla de la tabla hash
                                                                 */
 
-    // Control del factor de carga, si esta muy lleno se agranda la tabla
-/*
-	if((float)cantidad/(float)capacidad > 0.7){	
-		cout << "La tablita se esta agrandando" << endl;
-        __agrandar();
-	}
-*/
+    
     long long casilla = __divFunction(k);
     table[casilla].push_front(k);
 
@@ -121,40 +117,7 @@ int HashingOpen::__iniSize(int size){
     return valor;
 }
 
-void HashingOpen::__agrandar(){
-/* Agrandar la Tabla Hash
-    Returns:
-        Devuelve una tabla hash con el (doble de tamaño) * 1,3 acercado al primo mayor mas cercano junto con los valores reacomodados
-                                                                                */
 
-	list<long long> aux[capacidad]; // array con capacidad actual
-    int temp = capacidad;
-/*
-	// Copia todo la tabla en un array aux
-	for(int i = 0; i < capacidad; i++) aux[i] = table[i];
-	
-	capacidad *= 2; // Se duplica la capacidad
-    capacidad = __iniSize(capacidad); // Nueva capacidad
-
-	// Vacia y duplica tabla
-	table = new list<long long>[capacidad]
-	for(int i = 0; i < capacidad; i++){
-		table[i] = DISP;
-	}
-	
-	cantidad = 0;
-
-    cout << "Temporal: " << temp << endl;
-
-	// Se reacomodan los elementos
-	for(int i = 0; i < temp; i++){
-		if(aux[i] != DISP){
-			insertar(aux[i]);
-		}
-	}	
-}
-*/
-}
 /*************************************/
 /*******    Funciones hash     *******/
 /*************************************/

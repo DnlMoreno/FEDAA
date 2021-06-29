@@ -14,6 +14,7 @@
 
 using namespace std;
 
+/******** Funciones para la operación de inserción *********/
 void evaluationInsertArbol(ArbolBinarioBusqueda &arbol, double &tiempo, int contador, long long key, double** tpoArbol, int tElem[], int i);
 void evaluationInsertHashingClosed(HashingClosed &hash, double &tiempo, int contador, long long key, double** tpoHash, int tElem[], int i);
 void evaluationInsertHashingOpen(HashingOpen &hash, double &tiempo, int contador, long long key, double** tpoHash, int tElem[], int i);
@@ -21,16 +22,20 @@ void evaluationInsertUnorderedSetSTL(unordered_set<long long> &unSet, double &ti
 void evaluationInsertSetSTL(set<long long> &set, double &tiempo, int contador, long long key, double** tpoSet, int tElem[], int i);
 void impresionInsert(int tElem[], double** tpoArbol_id, double** tpoHashCerrado_id, double** tpoHashAbierto_id, double** tpoUnorderedSet_id, double** tpoSet_id, double** tpoArbol_name, double** tpoHashCerrado_name, double** tpoHashAbierto_name, double** tpoUnorderedSet_name, double** tpoSet_name);
 
+/******** Funciones para la operación de buscar *********/
 void evaluationSearchArbol(ArbolBinarioBusqueda &arbol, long long elemento, double tpoArbol[], int i);
 void evaluationSearchHashingClosed(HashingClosed &hash, long long elemento, double tpoHash[], int i);
 void evaluationSearchHashingOpen(HashingOpen &hash, long long elemento, double tpoHash[], int i);
 void evaluationSearchUnorderedSet(unordered_set<long long> &unSet, long long elemento, double tpoUnSet[], int i);
 void evaluationSearchSet(set<long long> &set, long long elemento, double tpoSet[], int i);
 
+/******** Funciones adicionales *********/
 long long asciiName(string name_user);
+long long asciiNameRadix(string name_user);
 double** createMatrix(int n, int m);
 void eliminarMatriz(double** &matriz, int num_filas);
 
+// Para medir el tiempo
 auto start = chrono::high_resolution_clock::now();
 auto finish = chrono::high_resolution_clock::now();
 int replicas = 10;
@@ -122,8 +127,8 @@ int main(int argc, char* argv[]){
         id_key = stoll(user_id, nullptr, 10);
         //cout << "Id_key: " << id_key << endl;
 
-        valor_name = asciiName(user_name);
-        //cout << "user_name: " << user_name << endl;
+        valor_name = asciiNameRadix(user_name);
+        //cout << "user_name: " << user_name << "valor: " << valor_name << endl;
 
         // Se guardan las claves para la inserción y se obtiene el rango maximo de valores para la busqueda
         vector_elem_id.push_back(id_key);
@@ -145,7 +150,6 @@ int main(int argc, char* argv[]){
 
     // Se realizan 30 replicas
     for(int i = 0; i < replicas; i++){
-        //cout << "LA PUTA: " << i << endl;
         // Contadores de tiempos globales de inserción
         double time_arbol_id = 0.0;
         double time_arbol_name = 0.0;
@@ -212,6 +216,49 @@ int main(int argc, char* argv[]){
     eliminarMatriz(tpoUnorderedSet_name, 9);
     eliminarMatriz(tpoSet_name, 9);
 
+    /*************************************************************/
+    /*******    MEDICIÓN DEL TAMAÑO DE LAS ESTRUCTURAS     *******/
+    /*************************************************************/
+    cout << "Tamanio HashingOpen ID: " << sizeof(hashAbierto_id) << endl;
+    cout << "********************* MEDICION DEL TAMANIO DE LAS ESTRUCTURAS CON CLAVE ID *********************" << endl;
+    cout << "Tamanio Arbol ID: " << sizeof(arbol_id) + sizeof(Nodo) * cantidad << endl;
+    cout << "Tamanio HashingClosed ID: " << sizeof(hashCerrado_id) + sizeof(long long) * hashCerrado_id.getCapacidad()<< endl;
+    cout << "Tamanio HashingOpen ID: " << sizeof(hashAbierto_id) + sizeof(list<long long>) * hashAbierto_id.getCapacidad() + hashAbierto_id.getCantidad() * sizeof(long long) << endl;
+
+    size_t count1 = 0;
+    for (unsigned i = 0; i < unSet_id.bucket_count(); ++i) {
+        size_t bucket_size = unSet_id.bucket_size(i);
+        if (bucket_size == 0) {
+            count1++;
+        }
+        else {
+            count1 += bucket_size;
+        }
+    }
+    cout << "Tamanio Unordered_set ID: " << count1 * sizeof(long long) << endl;
+
+    cout << "Tamanio Set ID: " << sizeof(set_id) + sizeof(long long) * set_id.size()  << endl;
+    cout << endl;
+
+    cout << "********************* MEDICION DEL TAMANIO DE LAS ESTRUCTURAS CON CLAVE NAME *********************" << endl;
+    cout << "Tamanio Arbol NAME: " << sizeof(arbol_name) + sizeof(Nodo) * cantidad << endl;
+    cout << "Tamanio HashingClosed NAME: " << sizeof(hashCerrado_name) + sizeof(long long) * hashCerrado_name.getCapacidad()<< endl;
+    cout << "Tamanio HashingOpen NAME: " << sizeof(hashAbierto_name) + sizeof(list<long long>) * hashAbierto_name.getCapacidad() + hashAbierto_name.getCantidad() * sizeof(long long) << endl;
+
+    size_t count2 = 0;
+    for (unsigned i = 0; i < unSet_name.bucket_count(); ++i) {
+        size_t bucket_size = unSet_name.bucket_size(i);
+        if (bucket_size == 0) {
+            count2++;
+        }
+        else {
+            count2 += bucket_size;
+        }
+    }
+    cout << "Tamanio Unordered_set NAME: " << count2 * sizeof(long long) << endl;
+
+    cout << "Tamanio Set NAME: " << sizeof(set_name) + sizeof(long long) * set_name.size()  << endl;
+    cout << endl;
 	/***********************************************************************************/
 	/*******    SE CREA VECTOR CON ELEMENTOS QUE NO SE ENCUENTRAN EN LA DATA     *******/
 	/***********************************************************************************/
@@ -251,8 +298,7 @@ int main(int argc, char* argv[]){
     /***************************************************************/
     /*******    EVALUACIÓN EXPERIMENTAL DE BUSQUEDA TDAs     *******/
     /***************************************************************/
-    //int n = 1000; // Promedio de busquedas
-    
+
     int n[] = {1000, 2000, 5000, 10000, 15000, 20000, 26000}; // Promedio de busquedas
 
 	srand(time(NULL));
@@ -370,10 +416,10 @@ int main(int argc, char* argv[]){
             elemento = vector_others_v1_name[(long long)rand() % cantidad];
             
             // Busqueda Arbol
-            evaluationSearchArbol(arbol_name, elemento, tpoHashCer_nameNoExistente_v1, i);
+            evaluationSearchArbol(arbol_name, elemento, tpoArbol_nameNoExistente_v1, i);
 
             // Busqueda Hashing Cerrado
-            evaluationSearchHashingClosed(hashCerrado_name, elemento, tpoHashCer_nameExistente, i);
+            evaluationSearchHashingClosed(hashCerrado_name, elemento, tpoHashCer_nameNoExistente_v1, i);
 
             // Busqueda Hashing Abierto
             evaluationSearchHashingOpen(hashAbierto_name, elemento, tpoHashAbie_nameNoExistente_v1, i); 
@@ -405,7 +451,7 @@ int main(int argc, char* argv[]){
             
         }
 
-        // Tiempo considerando el promedio de busquedas
+        // Tiempos considerando el promedio de busquedas
         tpoArbol_idExistente[i] /= n[i];
         tpoArbol_idNoExistente_v1[i] /= n[i];
         tpoArbol_idNoExistente_v2[i] /= n[i];
@@ -448,16 +494,16 @@ int main(int argc, char* argv[]){
         
         cout << "CANTIDAD DE BUSQUEDAS: " << n[i] << endl;
         cout << "********************* EVALUACION EXPERIMENTAL BUSQUEDAS CON CLAVE USER_ID *********************" << endl;
-        cout << "Tipo \t \t \t \tArbol[ns] \tHashCerrado[ns] \tHashAbierto[ns] \tUnordered_set[ns] \tSet[ns]" << endl;
-        cout << "Existente \t \t \t" << tpoArbol_idExistente[i] << "\t \t" << tpoHashCer_idExistente[i] << "\t \t \t" << tpoHashAbie_idExistente[i] << "\t \t \t" << tpoUnSet_idExistente[i] << "\t \t \t" << tpoUnSet_idExistente[i] << endl;
-        cout << "No existente grandes \t \t" << tpoArbol_idNoExistente_v1[i] << "\t \t" << tpoHashCer_idNoExistente_v1[i] << "\t \t \t" << tpoHashAbie_idNoExistente_v1[i] << "\t \t \t" << tpoUnSet_idNoExistente_v1[i] << "\t \t \t" << tpoSet_idNoExistente_v1[i] << endl;
-        cout << "No existente pequenios \t \t" << tpoArbol_idNoExistente_v2[i] << "\t \t" << tpoHashCer_idNoExistente_v2[i] << "\t \t \t" << tpoHashAbie_idNoExistente_v2[i] << "\t \t \t" << tpoUnSet_idNoExistente_v2[i] << "\t \t \t" << tpoSet_idNoExistente_v2[i] << endl;
+        cout << "Tipo \tArbol[ns] \tHashCerrado[ns] \tHashAbierto[ns] \tUnordered_set[ns] \tSet[ns]" << endl;
+        cout << "Existente \t" << tpoArbol_idExistente[i] << "\t" << tpoHashCer_idExistente[i] << "\t" << tpoHashAbie_idExistente[i] << "\t" << tpoUnSet_idExistente[i] << "\t" << tpoSet_idExistente[i] << endl;
+        cout << "NoExistenteGrandes \t" << tpoArbol_idNoExistente_v1[i] << "\t" << tpoHashCer_idNoExistente_v1[i] << " \t" << tpoHashAbie_idNoExistente_v1[i] << " \t" << tpoUnSet_idNoExistente_v1[i] << " \t" << tpoSet_idNoExistente_v1[i] << endl;
+        cout << "NoExistentePequenios \t" << tpoArbol_idNoExistente_v2[i] << "\t" << tpoHashCer_idNoExistente_v2[i] << " \t" << tpoHashAbie_idNoExistente_v2[i] << " \t" << tpoUnSet_idNoExistente_v2[i] << " \t" << tpoSet_idNoExistente_v2[i] << endl;
 
         cout << "********************* EVALUACION EXPERIMENTAL BUSQUEDAS CON CLAVE USER_NAME *********************" << endl;
-        cout << "Tipo \t \t \t \tArbol[ns] \tHashCerrado[ns] \tHashAbierto[ns] \tUnordered_set[ns] \tSet[ns]" << endl;
-        cout << "Existente \t \t \t" << tpoArbol_nameExistente[i] << "\t \t" << tpoHashCer_nameExistente[i] << "\t \t \t" << tpoHashAbie_nameExistente[i] << "\t \t \t" << tpoUnSet_nameExistente[i] << "\t \t \t" << tpoUnSet_nameExistente[i] << endl;
-        cout << "No existente grandes \t \t" << tpoArbol_nameNoExistente_v1[i] << "\t \t" << tpoHashCer_nameNoExistente_v1[i] << "\t \t \t" << tpoHashAbie_nameNoExistente_v1[i] << "\t \t \t" << tpoUnSet_nameNoExistente_v1[i] << "\t \t \t" << tpoSet_nameNoExistente_v1[i] << endl;
-        cout << "No existente pequenios \t \t" << tpoArbol_nameNoExistente_v2[i] << "\t \t" << tpoHashCer_nameNoExistente_v2[i] << "\t \t \t" << tpoHashAbie_nameNoExistente_v2[i] << "\t \t \t" << tpoUnSet_nameNoExistente_v2[i] << "\t \t \t" << tpoSet_nameNoExistente_v2[i] << endl;
+        cout << "Tipo  \tArbol[ns] \tHashCerrado[ns] \tHashAbierto[ns] \tUnordered_set[ns] \tSet[ns]" << endl;
+        cout << "Existente  \t" << tpoArbol_nameExistente[i] << "\t" << tpoHashCer_nameExistente[i] << " \t" << tpoHashAbie_nameExistente[i] << " \t" << tpoUnSet_nameExistente[i] << " \t" << tpoSet_nameExistente[i] << endl;
+        cout << "NoExistenteGrandes \t" << tpoArbol_nameNoExistente_v1[i] << "\t" << tpoHashCer_nameNoExistente_v1[i] << " \t" << tpoHashAbie_nameNoExistente_v1[i] << " \t" << tpoUnSet_nameNoExistente_v1[i] << " \t" << tpoSet_nameNoExistente_v1[i] << endl;
+        cout << "NoExistentePequenios \t" << tpoArbol_nameNoExistente_v2[i] << "\t" << tpoHashCer_nameNoExistente_v2[i] << " \t" << tpoHashAbie_nameNoExistente_v2[i] << " \t" << tpoUnSet_nameNoExistente_v2[i] << " \t" << tpoSet_nameNoExistente_v2[i] << endl;
 
     }
 
@@ -474,23 +520,23 @@ void evaluationInsertArbol(ArbolBinarioBusqueda &arbol, double &tiempo, int cont
 	finish = chrono::high_resolution_clock::now();
 	tiempo += chrono::duration_cast<chrono::microseconds> (finish - start).count();
 	//cout << "ARBOL: " << contador << endl;
-    if(contador == tElem[0]-1){	// insertar 50°
+    if(contador == tElem[0]-1){	        // insertar 100°
 		tpoArbol[0][i] = tiempo;
-	}else if(contador == tElem[1]-1){	// insertar 100°
+	}else if(contador == tElem[1]-1){	// insertar 200°
 		tpoArbol[1][i] = tiempo;
-	}else if(contador == tElem[2]-1){	// insertar 500°
+	}else if(contador == tElem[2]-1){	// insertar 400°
 		tpoArbol[2][i] = tiempo;
-	}else if(contador == tElem[3]-1){	// insertar 1000°
+	}else if(contador == tElem[3]-1){	// insertar 800°
 		tpoArbol[3][i] = tiempo;
-	}else if(contador == tElem[4]-1){	// insertar 5000°
+	}else if(contador == tElem[4]-1){	// insertar 1600°
 		tpoArbol[4][i] = tiempo;
-	}else if(contador == tElem[5]-1){	// insertar 10000°
+	}else if(contador == tElem[5]-1){	// insertar 3200°
 		tpoArbol[5][i] = tiempo;
-	}else if(contador == tElem[6]-1){
+	}else if(contador == tElem[6]-1){   // insertar 6400°
 		tpoArbol[6][i] = tiempo;
-	}else if(contador == tElem[7]-1){
+	}else if(contador == tElem[7]-1){   // insertar 12800°
 		tpoArbol[7][i] = tiempo;
-	}else if(contador == tElem[8]-1){
+	}else if(contador == tElem[8]-1){   // insertar 25600°
 		tpoArbol[8][i] = tiempo;
 	}  
 }
@@ -501,17 +547,17 @@ void evaluationInsertHashingClosed(HashingClosed &hash, double &tiempo, int cont
 	finish = chrono::high_resolution_clock::now();
 	tiempo += chrono::duration_cast<chrono::microseconds> (finish - start).count();
 	//cout << "CERRADO: " << contador << endl;
-    if(contador == tElem[0]-1){	// insertar 50°
+    if(contador == tElem[0]-1){	
 		tpoHash[0][i] = tiempo;
-	}else if(contador == tElem[1]-1){	// insertar 100°
+	}else if(contador == tElem[1]-1){	
 		tpoHash[1][i] = tiempo;
-	}else if(contador == tElem[2]-1){	// insertar 500°
+	}else if(contador == tElem[2]-1){	
 		tpoHash[2][i] = tiempo;
-	}else if(contador == tElem[3]-1){	// insertar 1000°
+	}else if(contador == tElem[3]-1){
 		tpoHash[3][i] = tiempo;
-	}else if(contador == tElem[4]-1){	// insertar 5000°
+	}else if(contador == tElem[4]-1){	
 		tpoHash[4][i] = tiempo;
-	}else if(contador == tElem[5]-1){	// insertar 10000°
+	}else if(contador == tElem[5]-1){	
 		tpoHash[5][i] = tiempo;
 	}else if(contador == tElem[6]-1){
 		tpoHash[6][i] = tiempo;
@@ -528,17 +574,17 @@ void evaluationInsertHashingOpen(HashingOpen &hash, double &tiempo, int contador
 	finish = chrono::high_resolution_clock::now();
 	tiempo += chrono::duration_cast<chrono::microseconds> (finish - start).count();
 	//cout << "ABIERTO: " << contador << endl;
-    if(contador == tElem[0]-1){	// insertar 50°
+    if(contador == tElem[0]-1){	
 		tpoHash[0][i] = tiempo;
-	}else if(contador == tElem[1]-1){	// insertar 100°
+	}else if(contador == tElem[1]-1){	
 		tpoHash[1][i] = tiempo;
-	}else if(contador == tElem[2]-1){	// insertar 500°
+	}else if(contador == tElem[2]-1){	
 		tpoHash[2][i] = tiempo;
-	}else if(contador == tElem[3]-1){	// insertar 1000°
+	}else if(contador == tElem[3]-1){	
 		tpoHash[3][i] = tiempo;
-	}else if(contador == tElem[4]-1){	// insertar 5000°
+	}else if(contador == tElem[4]-1){	
 		tpoHash[4][i] = tiempo;
-	}else if(contador == tElem[5]-1){	// insertar 10000°
+	}else if(contador == tElem[5]-1){	
 		tpoHash[5][i] = tiempo;
 	}else if(contador == tElem[6]-1){
 		tpoHash[6][i] = tiempo;
@@ -555,17 +601,17 @@ void evaluationInsertUnorderedSetSTL(unordered_set<long long> &unSet, double &ti
 	finish = chrono::high_resolution_clock::now();
 	tiempo += chrono::duration_cast<chrono::microseconds> (finish - start).count();
 	//cout << "UNORDERED_SET: " << contador << endl;
-    if(contador == tElem[0]-1){	// insertar 50°
+    if(contador == tElem[0]-1){	
 		tpoUnSet[0][i] = tiempo;
-	}else if(contador == tElem[1]-1){	// insertar 100°
+	}else if(contador == tElem[1]-1){	
 		tpoUnSet[1][i] = tiempo;
-	}else if(contador == tElem[2]-1){	// insertar 500°
+	}else if(contador == tElem[2]-1){	
 		tpoUnSet[2][i] = tiempo;
-	}else if(contador == tElem[3]-1){	// insertar 1000°
+	}else if(contador == tElem[3]-1){	
 		tpoUnSet[3][i] = tiempo;
-	}else if(contador == tElem[4]-1){	// insertar 5000°
+	}else if(contador == tElem[4]-1){	
 		tpoUnSet[4][i] = tiempo;
-	}else if(contador == tElem[5]-1){	// insertar 10000°
+	}else if(contador == tElem[5]-1){	
 		tpoUnSet[5][i] = tiempo;
 	}else if(contador == tElem[6]-1){
 		tpoUnSet[6][i] = tiempo;
@@ -582,17 +628,17 @@ void evaluationInsertSetSTL(set<long long> &set, double &tiempo, int contador, l
 	finish = chrono::high_resolution_clock::now();
 	tiempo += chrono::duration_cast<chrono::microseconds> (finish - start).count();
 	//cout << "SET: " << contador << endl;
-    if(contador == tElem[0]-1){	// insertar 50°
+    if(contador == tElem[0]-1){
 		tpoSet[0][i] = tiempo;
-	}else if(contador == tElem[1]-1){	// insertar 100°
+	}else if(contador == tElem[1]-1){	
 		tpoSet[1][i] = tiempo;
-	}else if(contador == tElem[2]-1){	// insertar 500°
+	}else if(contador == tElem[2]-1){	
 		tpoSet[2][i] = tiempo;
-	}else if(contador == tElem[3]-1){	// insertar 1000°
+	}else if(contador == tElem[3]-1){	
 		tpoSet[3][i] = tiempo;
-	}else if(contador == tElem[4]-1){	// insertar 5000°
+	}else if(contador == tElem[4]-1){
 		tpoSet[4][i] = tiempo;
-	}else if(contador == tElem[5]-1){	// insertar 10000°
+	}else if(contador == tElem[5]-1){	
 		tpoSet[5][i] = tiempo;
 	}else if(contador == tElem[6]-1){
 		tpoSet[6][i] = tiempo;
@@ -606,6 +652,7 @@ void evaluationInsertSetSTL(set<long long> &set, double &tiempo, int contador, l
 void impresionInsert(int tElem[], double** tpoArbol_id, double** tpoHashCerrado_id, double** tpoHashAbierto_id, double** tpoUnorderedSet_id, double** tpoSet_id, double** tpoArbol_name, double** tpoHashCerrado_name, double** tpoHashAbierto_name, double** tpoUnorderedSet_name, double** tpoSet_name){
 	double temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8, temp9, temp10;
 
+    // Vectores en donde se guarda el tiempo promedio de las 10 replicas
     double tiempoArbol_id[9];
     double tiempoHashCerrado_id[9];
     double tiempoHashAbierto_id[9];
@@ -618,6 +665,7 @@ void impresionInsert(int tElem[], double** tpoArbol_id, double** tpoHashCerrado_
     double tiempoUnorderedSet_name[9];
     double tiempoSet_name[9];
     
+    // Se suman los tiempos de las replicas por estructura
     for(int i = 0; i<9; i++){
         for(int j = 0; j<replicas; j++){
             temp1 += tpoArbol_id[i][j];
@@ -709,6 +757,25 @@ void evaluationSearchSet(set<long long> &set, long long elemento, double tpoSet[
 /**************************************/
 
 long long asciiName(string name_user){
+/* Manejo de claves con letras
+    Parameters:
+        name_user: Clave con nombre unico que quiere ingresar a la Tabla
+        
+    Returns:
+        int: Devuelve el nombre transformado en un numero 
+                                                    */
+
+    long long valorAscii, valorName;
+    
+    // Mutlplicación de cada caracter ASCII por el indice +1 del elemento
+    for(int i=0; i < name_user.size() ; i++){ // Se consideran solo los 6 primeros digitos
+        valorAscii = name_user[i];
+        valorName += valorAscii * (i+1);
+    }
+    return valorName;
+}
+
+long long asciiNameRadix(string name_user){
 /* Manejo de claves con letras
     Parameters:
         name_user: Clave con nombre unico que quiere ingresar a la Tabla
