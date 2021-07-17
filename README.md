@@ -1,6 +1,6 @@
 # Fundamentos de estructuras de datos y algoritmos
 
-### Trabajo No. 1: Algoritmos de ordenamiento y multiplicación de matrices
+### Trabajo No. 1: Evaluación experimental de algoritmos de ordenamiento y multiplicación de matrices
 
 #### **Integrantes:**
 
