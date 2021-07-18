@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "libs/projectGraph.hpp"
+#include "libs/projectGraphMatrix.hpp"
 
 using namespace std;
 
@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
     }
 	
     // Cantidad de nodos
-	int cant_nodos = 41858;
+	int cant_nodos = 11;
 	
 	MatrixGraph users_graph(cant_nodos);
 
@@ -38,25 +38,29 @@ int main(int argc, char* argv[]){
 		getline(file, temp_followee, ';');
         getline(file, temp_follower, '\n');
 
+		cout << "FOLLOWEE1: "<< followee << endl;
+		cout << "FOLLOWER1: "<< follower << endl;
+
         // No se considera la primera fila
-        if (followee == "followee") continue;
+        if (follower == "follower") continue;
 
         // Se pasa el string a numero int
         id_follower = atoi(temp_follower.c_str());
 		id_followee = atoi(temp_followee.c_str());
-        cout << "Id_follower: " << id_follower << endl;
-		cout << "Id_followee: " << id_followee << endl;
+        //cout << "Id_follower: " << id_follower << endl;
+		//cout << "Id_followee: " << id_followee << endl;
 
-		users_graph.insertar(id_follower, id_followee);
+		//users_graph.insertar(id_follower, id_followee);
 
 		//Se insertar los usuarios y se crean los enlances en el grafo
-/*
+
 		if(users_graph.insertar(id_follower, id_followee) == 1){
 			cout << "Se inserto el par (" << id_follower << ", " << id_followee << ") al MatrixGraph" << endl;
 		}else{
 			cout << "No se pudo insertar el par ommggggggggggggggggggggggggHHHHHHHHHHHHHHHHHHHHHHHHH (" << id_follower << ", " << id_followee << ") al MatrixGraph" << endl;
 		}
-		*/
+		cout << "FOLLOWEE2: "<< followee << endl;
+		cout << "FOLLOWER2: "<< follower << endl;
     }
     file.close();
 

@@ -1,4 +1,4 @@
-#include "projectGraph.hpp"
+#include "projectGraphMatrix.hpp"
 
 MatrixGraph::MatrixGraph(int nodos){
 	this->nodos = nodos;
