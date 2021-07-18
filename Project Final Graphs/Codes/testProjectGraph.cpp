@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
         cout << "Id_follower: " << id_follower << endl;
 		cout << "Id_followee: " << id_followee << endl;
 
-		users_graph.insertar(id_follower, id_followee)
+		users_graph.insertar(id_follower, id_followee);
 
 		//Se insertar los usuarios y se crean los enlances en el grafo
 /*
