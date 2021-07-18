@@ -2,11 +2,11 @@
 
 MatrixGraph::MatrixGraph(int nodos){
 	this->nodos = nodos;
-	matrix = new bool*[nodos];
+	matrix = new int*[nodos];
 	for(int i = 0; i < nodos; i++){
-		matrix[i] = new bool[nodos];
+		matrix[i] = new int[nodos];
 		for(int j = 0; j < nodos; j++){
-			matrix[i][j] = false;
+			matrix[i][j] = 0;
 		}
 	}
 }
@@ -18,11 +18,11 @@ MatrixGraph::~MatrixGraph(){
 	delete [] matrix;
 }
 
-bool MatrixGraph::insertar(int p, int q){
-	if(p >= nodos || q >= nodos) return false; // no se inserto fuera de rango
-	if(matrix[p][q]) return false; // arista ya insertada
-	matrix[p][q] = true;
-	return true;
+int MatrixGraph::insertar(int p, int q){
+	if(p >= nodos || q >= nodos) return 0; // no se inserto fuera de rango
+	if(matrix[p][q]) return 0; // arista ya insertada
+	matrix[p][q] = 1;
+	return 1;
 }
 
 bool MatrixGraph::checkLink(int p, int q){

@@ -28,61 +28,41 @@ int main(int argc, char* argv[]){
     /*******************************************************/
     /*******    LECTURA DE LOS DATOS DEL ARCHIVO     *******/
     /*******************************************************/
-	string university, user_id, user_name, number_tweets, friends_count, followers_count, created_at;
-    long long id_key, valor_name;
+	int id_follower, id_followee;
+	string follower, followee, temp_follower, temp_followee;
 
     while(file.good()){
         // Lectura de archivos
-        getline(file, university, ';');
-        getline(file, user_id, ';');
-        getline(file, user_name, ';');
-        getline(file, number_tweets, ';');
-        getline(file, friends_count, ';');
-        getline(file, followers_count, ';');
-        getline(file, created_at, '\n');
+        getline(file, followee, ';');
+        getline(file, follower, ';');
+		getline(file, temp_followee, ';');
+        getline(file, temp_follower, '\n');
 
         // No se considera la primera fila
-        if (university == "university") continue;
+        if (followee == "followee") continue;
 
-        // Se pasa el string a numero long long
-        id_key = stoll(user_id, nullptr, 10);
-        //cout << "Id_key: " << id_key << endl;
+        // Se pasa el string a numero int
+        id_follower = atoi(temp_follower.c_str());
+		id_followee = atoi(temp_followee.c_str());
+        cout << "Id_follower: " << id_follower << endl;
+		cout << "Id_followee: " << id_followee << endl;
 
-        valor_name = asciiNameRadix(user_name);
-        //cout << "user_name: " << user_name << "valor: " << valor_name << endl;
+		users_graph.insertar(id_follower, id_followee)
 
-        // Se guardan las claves para la inserción y se obtiene el rango maximo de valores para la busqueda
-        vector_elem_id.push_back(id_key);
-        myset_id.insert(id_key);
-        if(maximo_id < id_key) maximo_id = id_key;
-        if(minimo_id > id_key) minimo_id = id_key;
-
-        vector_elem_name.push_back(valor_name);
-        myset_name.insert(valor_name);
-        if(maximo_name < valor_name) maximo_name = valor_name;
-        if(minimo_name > valor_name) minimo_name = valor_name;
+		//Se insertar los usuarios y se crean los enlances en el grafo
+/*
+		if(users_graph.insertar(id_follower, id_followee) == 1){
+			cout << "Se inserto el par (" << id_follower << ", " << id_followee << ") al MatrixGraph" << endl;
+		}else{
+			cout << "No se pudo insertar el par ommggggggggggggggggggggggggHHHHHHHHHHHHHHHHHHHHHHHHH (" << id_follower << ", " << id_followee << ") al MatrixGraph" << endl;
+		}
+		*/
     }
-
     file.close();
-	
-	cout << "=========================" << endl;
-	cout << "Inserciones: " << endl;
-	cout << "=========================" << endl;
-	
-	while(input >> p >> q){
-		if(mg.insertar(p, q)){
-			cout << "Inserté el par (" << p << ", " << q << ") al MatrixGraph" << endl;
-		}else{
-			cout << "No pude insertar el par (" << p << ", " << q << ") al MatrixGraph" << endl;
-		}
-		
-		if(lg.insertar(p, q)){
-			cout << "Inserté el par (" << p << ", " << q << ") al LinkedGraph" << endl;
-		}else{
-			cout << "No pude insertar el par (" << p << ", " << q << ") al LinkedGraph" << endl;
-		}
-	}
-	
+
+	users_graph.printMatrix();
+
+/*	
 	cout << "=========================" << endl;
 	cout << "Matriz de adyacencia: " << endl;
 	cout << "=========================" << endl;
@@ -203,6 +183,6 @@ int main(int argc, char* argv[]){
 	cout << "Lista de adyacencia " << endl;
 	cout << "=========================" << endl;
 	lg.DFS();
-	
+*/
 	return 0;
 }
