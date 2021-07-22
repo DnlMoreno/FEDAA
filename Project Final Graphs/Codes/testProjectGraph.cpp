@@ -20,6 +20,10 @@ struct Users{
 	}
 };
 */
+
+// Cantidad de nodos
+int cant_nodos = 11;
+
 using namespace std;
 
 int main(int argc, char* argv[]){
@@ -36,10 +40,7 @@ int main(int argc, char* argv[]){
         cout << "ERROR!!! el archivo " << filename << " no se pudo abrir\n";
         return -1;
     }
-	
-    // Cantidad de nodos
-	int cant_nodos = 11;
-	
+		
 	// Lista de adyacencia out-degree e in-degree
 	LinkedGraph users_out(cant_nodos);
 	LinkedGraph users_in(cant_nodos);
@@ -67,151 +68,18 @@ int main(int argc, char* argv[]){
 		Users user_p(id_follower, follower);
 		Users user_q(id_followee, followee);
 
-		//Se insertar los usuarios y se crean los enlances en el grafo
+		//Se insertan los usuarios y se crean los enlances en el grafo
 		users_out.insertar(user_p, user_q);
-		users_in.insertar(user_q, user_p);
 
-		
-/*
-		if(users_out.insertar(id_follower, id_followee) == 1){
-			cout << "Se inserto el par (" << id_follower << ", " << id_followee << ") al MatrixGraph" << endl;
-		}else{
-			cout << "No se pudo insertar el par ommggggggggggggggggggggggggHHHHHHHHHHHHHHHHHHHHHHHHH (" << id_follower << ", " << id_followee << ") al MatrixGraph" << endl;
-		}
-		cout << "FOLLOWEE2: "<< followee << endl;
-		cout << "FOLLOWER2: "<< follower << endl;
-*/
     }
     file.close();
 
 	cout << "Out degree: " << endl;
-	users_out.printList();
-	
-	cout << endl;
-	cout << "In degree: " << endl;
-	users_in.printList();
+	users_out.printListOut();
 
-/*	
-	cout << "=========================" << endl;
-	cout << "Matriz de adyacencia: " << endl;
-	cout << "=========================" << endl;
-	mg.printMatrix();
-	
-	cout << "=========================" << endl;
-	cout << "Lista de adyacencia " << endl;
-	cout << "=========================" << endl;
-	lg.printList();
-	
-	cout << "=========================" << endl;
-	cout << "Chequeo de enlaces: " << endl;
-	cout << "=========================" << endl;
-	cout << "Matriz de adyacencia: " << endl;
-	cout << "=========================" << endl;
-	
-	for(int i = 0; i < nodos; i++){
-		for(int j = 0; j < nodos; j++){
-			if(mg.checkLink(i,j)){
-				cout << "Encontré el par (" << i << ", " << j << ")" << endl;
-			}
-		}
-	}
-	
-	cout << "=========================" << endl;
-	cout << "Lista de adyacencia " << endl;
-	cout << "=========================" << endl;
-	
-	for(int i = 0; i < nodos; i++){
-		for(int j = 0; j < nodos; j++){
-			if(lg.checkLink(i,j)){
-				cout << "Encontré el par (" << i << ", " << j << ")" << endl;
-			}
-		}
-	}
-	
-	cout << "=========================" << endl;
-	cout << "Vecinos directos: " << endl;
-	cout << "=========================" << endl;
-	cout << "Matriz de adyacencia: " << endl;
-	cout << "=========================" << endl;
-	
-	vector<int> v;
-	
-	for(int i = 0; i < nodos; i++){
-		cout << "Vecino de " << i << ": ";
-		v = *(mg.vecinosDirectos(i));
-		for(int j = 0; j < v.size(); j++){
-			cout << v[j] << " - ";
-		}
-		cout << endl;
-	}
-	
-	cout << "=========================" << endl;
-	cout << "Lista de adyacencia " << endl;
-	cout << "=========================" << endl;
-	
-	for(int i = 0; i < nodos; i++){
-		cout << "Vecino de " << i << ": ";
-		v = *(lg.vecinosDirectos(i));
-		for(int j = 0; j < v.size(); j++){
-			cout << v[j] << " - ";
-		}
-		cout << endl;
-	}
-	
-	cout << "=========================" << endl;
-	cout << "Vecinos reversos: " << endl;
-	cout << "=========================" << endl;
-	cout << "Matriz de adyacencia: " << endl;
-	cout << "=========================" << endl;
-	
-	for(int i = 0; i < nodos; i++){
-		cout << "Reverso de " << i << ": ";
-		v = *(mg.vecinosReversos(i));
-		for(int j = 0; j < v.size(); j++){
-			cout << v[j] << " - ";
-		}
-		cout << endl;
-	}
-	
-	cout << "=========================" << endl;
-	cout << "Lista de adyacencia " << endl;
-	cout << "=========================" << endl;
-	
-	for(int i = 0; i < nodos; i++){
-		cout << "Reverso de " << i << ": ";
-		v = *(lg.vecinosReversos(i));
-		for(int j = 0; j < v.size(); j++){
-			cout << v[j] << " - ";
-		}
-		cout << endl;
-	}
-	
-	
-	cout << "=========================" << endl;
-	cout << "BFS : (Breadth First Search)" << endl;
-	cout << "=========================" << endl;
-	cout << "=========================" << endl;
-	cout << "Matriz de adyacencia: " << endl;
-	cout << "=========================" << endl;
-	mg.BFS();
-	
-	cout << "=========================" << endl;
-	cout << "Lista de adyacencia " << endl;
-	cout << "=========================" << endl;
-	lg.BFS();
-	
-	cout << "=========================" << endl;
-	cout << "DFS (Depth First Search) : " << endl;
-	cout << "=========================" << endl;
-	cout << "=========================" << endl;
-	cout << "Matriz de adyacencia: " << endl;
-	cout << "=========================" << endl;
-	mg.DFS();
-	
-	cout << "=========================" << endl;
-	cout << "Lista de adyacencia " << endl;
-	cout << "=========================" << endl;
-	lg.DFS();
-*/
+	cout << endl; 
+	cout << "In degree: " << endl;
+	users_out.printListIn();
+
 	return 0;
 }

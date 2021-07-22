@@ -33,10 +33,14 @@ public:
 	vector<Users>* vecinosDirectos(Users p);
 	void BFS(Users origen);
 	
-	void printList();
+	void printListOut();
+	void printListIn();
 private:
-	vector<Users>* lista;
+	vector<Users>* lista_out;
+	vector<Users>* lista_in;
+
 	int nodos;
+	vector<Users> users;
 };
 
 #endif
