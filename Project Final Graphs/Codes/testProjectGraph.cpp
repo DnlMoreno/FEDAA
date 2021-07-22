@@ -2,7 +2,24 @@
 #include <fstream>
 #include <string>
 #include "libs/projectGraphMatrix.hpp"
+#include "libs/ProjectGraphList.hpp"
+/*
+// Los usuarios se crean en base a esta estructura
+struct Users{
+    int id;
+    int name;
+    int followee; // Seguidos
+	int follower; // Seguidores
+	bool influencer; // True si el usuario es influencer
+	int num_influencers; // Cantidad de influencers en el 
 
+    // Inicializo las variables de la estructura
+    Users(int id, int name, int followee, int follower, bool influencer, int num_influencers) 
+		: id(id), name(name), followee(0), follower(0), influencer(false), num_influencers(0) 
+	{	
+	}
+};
+*/
 using namespace std;
 
 int main(int argc, char* argv[]){
@@ -23,7 +40,9 @@ int main(int argc, char* argv[]){
     // Cantidad de nodos
 	int cant_nodos = 11;
 	
-	MatrixGraph users_graph(cant_nodos);
+	// Lista de adyacencia out-degree e in-degree
+	LinkedGraph users_out(cant_nodos);
+	LinkedGraph users_in(cant_nodos);
 
     /*******************************************************/
     /*******    LECTURA DE LOS DATOS DEL ARCHIVO     *******/
@@ -38,33 +57,39 @@ int main(int argc, char* argv[]){
 		getline(file, temp_followee, ';');
         getline(file, temp_follower, '\n');
 
-		cout << "FOLLOWEE1: "<< followee << endl;
-		cout << "FOLLOWER1: "<< follower << endl;
-
         // No se considera la primera fila
         if (follower == "follower") continue;
 
         // Se pasa el string a numero int
         id_follower = atoi(temp_follower.c_str());
 		id_followee = atoi(temp_followee.c_str());
-        //cout << "Id_follower: " << id_follower << endl;
-		//cout << "Id_followee: " << id_followee << endl;
-
-		//users_graph.insertar(id_follower, id_followee);
+ 
+		Users user_p(id_follower, follower);
+		Users user_q(id_followee, followee);
 
 		//Se insertar los usuarios y se crean los enlances en el grafo
+		users_out.insertar(user_p, user_q);
+		users_in.insertar(user_q, user_p);
 
-		if(users_graph.insertar(id_follower, id_followee) == 1){
+		
+/*
+		if(users_out.insertar(id_follower, id_followee) == 1){
 			cout << "Se inserto el par (" << id_follower << ", " << id_followee << ") al MatrixGraph" << endl;
 		}else{
 			cout << "No se pudo insertar el par ommggggggggggggggggggggggggHHHHHHHHHHHHHHHHHHHHHHHHH (" << id_follower << ", " << id_followee << ") al MatrixGraph" << endl;
 		}
 		cout << "FOLLOWEE2: "<< followee << endl;
 		cout << "FOLLOWER2: "<< follower << endl;
+*/
     }
     file.close();
 
-	users_graph.printMatrix();
+	cout << "Out degree: " << endl;
+	users_out.printList();
+	
+	cout << endl;
+	cout << "In degree: " << endl;
+	users_in.printList();
 
 /*	
 	cout << "=========================" << endl;
