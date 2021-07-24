@@ -55,6 +55,7 @@ Users::~Users(){
 /*******    CLASE GRAFO CON LISTA DE ADYACENCIA    *******/
 /*********************************************************/
 int top_ranking = 5;
+int num_tpoliticas = 3;
 
 
 LinkedGraph::LinkedGraph(int nodos){
@@ -107,7 +108,13 @@ vector<int>* LinkedGraph::vecinosDirectos(int p){
 	return &(lista_out[p]);
 }
 
-void LinkedGraph::BFS(int s){
+void LinkedGraph::tendenciaPolitica(){
+	for(int i = num_tpoliticas; i < users.size(); i++){
+		__BFSmodificado(users[i].id);
+	}
+}
+
+void LinkedGraph::__BFSmodificado(int s){
 	// Si el vertice se encuentra en el diccionario, significa que fue visitado
 	// Key = id del vertice
 	// El vector guarda el padre, el orden y el numero de influencers que hay en el camino.
@@ -122,15 +129,29 @@ void LinkedGraph::BFS(int s){
 	queue<int> cola;
 	cola.push(s);
 	datos[s] = vector<int> {-1, 0, 0}; // No se considera como influencer al vertice origen, aunque lo fuera
-	
+
+	// Los 4 vertices sumideros no han sido visitados
+	vector<bool> v = {false,false,false,false};
+	vector<bool> prueba = {false,false,false};
+	int max = 999999; // Guarda el ultimo orden, del ultimo nodo sumidero encontrado
+	bool flag = false;
+
 	while(!cola.empty()){
-		// Se imprime el primero en la cola y se desencola
+		
 		s = cola.front();
+
+		// Condición de termino, en caso de haber encontrado los 4 vertices sumideros
+		if (prueba[0] == true & prueba[1] == true & prueba[2] == true & max < datos.at(s)[1]) break;
+
+		// Se imprime el primero en la cola y se desencola
 		cout << s << " - ";
 		cola.pop();
-
+		
 		// Se obtienen todos los vertices adyacentes de s
 		vector<int> vecinos = *(vecinosDirectos(s));
+
+		// Si no entra a este for significa que es un nodo sumidero.
+		// Los nodos sumideros de la base de datos son: Cooperativa, Latercera, Soyvaldivia.cl, Elmostrador
 		for(int i = 0; i < vecinos.size(); i++){
 			if(datos.count(vecinos[i]) != 1){
 
@@ -143,6 +164,18 @@ void LinkedGraph::BFS(int s){
 
 				// Se van guardando los vectices padres e hijos en su nivel correspondiente
 				nivel[datos.at(s)[1] + 1].push_back(make_pair(s,vecinos[i]));
+
+				// Permite controlar la salida del codigo
+				if (vecinos[i] == 0) prueba[0] = true;
+				else if (vecinos[i] == 1) prueba[1] = true;
+				else if (vecinos[i] == 2) prueba[2] = true;
+				//else if (vecinos[i] == 3) v[3] = true;
+
+				// Se guarda el ultimo orden, del ultimo nodo sumidero encontrado
+				if(prueba[0] == true & prueba[1] == true & prueba[2] == true & flag == false){
+					max = datos.at(s)[1] + 1;
+					flag = true;
+				}
 			}
 
 			// Se considera el camino con mayor influencers en caso de que dos vertices con mismo orden lleguen al siguiente vertice
@@ -173,6 +206,7 @@ void LinkedGraph::BFS(int s){
 			}
 		}
 	}
+	//__porcentajeTendencias(datos);
 	cout << endl;
 }
 

@@ -87,6 +87,12 @@ int main(int argc, char* argv[]){
     users.ranking();
     users.recorrerUsers();
 
+    cout << endl; 
+    cout << "Tendencia politica: " << endl;
+    cout << endl; 
+
+    users.tendenciaPolitica();
+
 
 	return 0;
 }

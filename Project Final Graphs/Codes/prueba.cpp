@@ -26,6 +26,11 @@ int main(int argc, char* argv[]){
 
     for(auto& x: nivel.at(3)){
         cout << "(" << x.first << "," << x.second << ")" <<endl;
+        x.first = 21;
+    }
+
+    for(auto& x: nivel.at(3)){
+        cout << "(" << x.first << "," << x.second << ")" <<endl;
     }
 
     for(int i =0; i<vecinos.size(); i++){

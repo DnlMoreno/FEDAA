@@ -73,7 +73,7 @@ public:
 	bool insertar(Users p, Users q);
 	bool checkLink(Users p, Users q);
 	vector<int>* vecinosDirectos(int p);
-	void BFS(int origen);
+	void tendenciaPolitica();
 	
 	void printListOut();
 	void printListIn();
@@ -91,6 +91,8 @@ private:
 	priority_queue<Users, vector<Users>, CompareOut> Influenciables;
 
 	void __ranking();
+	void __BFSmodificado(int origen);
+	void __porcentajeTendencias(unordered_map<int, vector<int>>);
 };
 
 
