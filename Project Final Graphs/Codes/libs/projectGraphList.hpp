@@ -6,7 +6,8 @@
 #include <queue>
 #include <stack>
 #include <algorithm>
-#include <queue> 
+#include <queue>
+#include <unordered_map> 
 
 using namespace std;
 
@@ -71,8 +72,8 @@ public:
 	~LinkedGraph();
 	bool insertar(Users p, Users q);
 	bool checkLink(Users p, Users q);
-	vector<Users>* vecinosDirectos(Users p);
-	void BFS(Users origen);
+	vector<int>* vecinosDirectos(int p);
+	void BFS(int origen);
 	
 	void printListOut();
 	void printListIn();
@@ -80,8 +81,8 @@ public:
 
 	void recorrerUsers();
 private:
-	vector<Users>* lista_out;
-	vector<Users>* lista_in;
+	vector<int>* lista_out;
+	vector<int>* lista_in;
 
 	int nodos;
 	vector<Users> users;

@@ -17,10 +17,10 @@ Users::Users(int id, string name, int follower_count, int followee_count){
 	this->influencer = false; // True si el usuario es influencer
 
 	// Tendencia politica de cada usuario obtenida del BFS
-	this->tend_politica1 = 0; 
-	this->tend_politica2 = 0;
-	this->tend_politica3 = 0;
-	this->tend_politica4 = 0;
+	this->tend_politica1 = 0.0; 
+	this->tend_politica2 = 0.0;
+	this->tend_politica3 = 0.0;
+	this->tend_politica4 = 0.0;
 }
 
 // Usuarios seguidos inicializados
@@ -36,10 +36,10 @@ Users::Users(int id, string name){
 	this->influencer = false; // True si el usuario es influencer
 
 	// Tendencia politica de cada usuario obtenida del BFS
-	this->tend_politica1 = 0; 
-	this->tend_politica2 = 0;
-	this->tend_politica3 = 0;
-	this->tend_politica4 = 0;
+	this->tend_politica1 = 0.0; 
+	this->tend_politica2 = 0.0;
+	this->tend_politica3 = 0.0;
+	this->tend_politica4 = 0.0;
 }
 
 // Constructor por defecto
@@ -60,8 +60,8 @@ int top_ranking = 5;
 LinkedGraph::LinkedGraph(int nodos){
 	this->nodos = nodos;
 
-	lista_out = new vector<Users>[nodos];
-	lista_in = new vector<Users>[nodos];
+	lista_out = new vector<int>[nodos];
+	lista_in = new vector<int>[nodos];
 
 	users.resize(nodos);
 }
@@ -73,7 +73,7 @@ LinkedGraph::~LinkedGraph(){
 bool LinkedGraph::insertar(Users p, Users q){
 	if(p.id >= nodos || q.id >= nodos) return false; // no se inserto fuera de rango
 	for(int i = 0; i < lista_out[p.id].size(); i++){
-		if(lista_out[p.id][i].id == q.id) return false; // arista ya insertada
+		if(lista_out[p.id][i] == q.id) return false; // arista ya insertada
 	}
 
 	//cout << "ID: (" << users[p.id].id << ") NAME: " << users[p.id].name << endl;
@@ -85,8 +85,8 @@ bool LinkedGraph::insertar(Users p, Users q){
 	//cout << "ID: (" << users[p.id].id << ") NAME: " << users[p.id].name << endl;
 	
 	// Se ingresan los usuarios a una lista de ady. que contiene los out-deegre y a otra que contiene los in-deegre
-	lista_out[p.id].push_back(q);
-	lista_in[q.id].push_back(p);
+	lista_out[p.id].push_back(q.id);
+	lista_in[q.id].push_back(p.id);
 
 	//cout << "PARA LOS OUT-DEGREE " << p.id << ": " << p.name << endl;
 	//cout << "PARA LOS IN-DEGREE " << q.id << ": " << q.name << endl;
@@ -97,39 +97,79 @@ bool LinkedGraph::insertar(Users p, Users q){
 bool LinkedGraph::checkLink(Users p, Users q){
 	if(p.id >= nodos || q.id >= nodos) return false; // fuera de rango
 	for(int i = 0; i < lista_out[p.id].size(); i++){
-		if(lista_out[p.id][i].id == q.id) return true;
+		if(lista_out[p.id][i] == q.id) return true;
 	}
 	return false;
 }
 
-vector<Users>* LinkedGraph::vecinosDirectos(Users p){
-	if(p.id >= nodos) return NULL; // fuera de rango
-	return &(lista_out[p.id]);
+vector<int>* LinkedGraph::vecinosDirectos(int p){
+	if(p >= nodos) return NULL; // fuera de rango
+	return &(lista_out[p]);
 }
 
-void LinkedGraph::BFS(Users origen){
-	bool visitados[nodos];
-	bool encolados[nodos];
-	int num_influencers[nodos];
-	for(int i = 0; i < nodos; i++){
-		visitados[i] = false;
-		encolados[i] = false;
-	}
-	queue<Users> cola;
-	cola.push(origen);
-	encolados[0] = true;
+void LinkedGraph::BFS(int s){
+	// Si el vertice se encuentra en el diccionario, significa que fue visitado
+	// Key = id del vertice
+	// El vector guarda el padre, el orden y el numero de influencers que hay en el camino.
+	unordered_map<int, vector<int>> datos;
+
+	// Permite hacer comparaciones por nivel
+	// Key = id del vertice
+	// El vector guarda al padre e hijo.
+	unordered_map<int, vector<pair<int, int>> > nivel;
+
+	// Se encola y se marca el vertice de origen como visitado
+	queue<int> cola;
+	cola.push(s);
+	datos[s] = vector<int> {-1, 0, 0}; // No se considera como influencer al vertice origen, aunque lo fuera
 	
 	while(!cola.empty()){
-		Users nodo = cola.front();
+		// Se imprime el primero en la cola y se desencola
+		s = cola.front();
+		cout << s << " - ";
 		cola.pop();
-		cout << nodo.id << " - ";
-		visitados[nodo.id] = true;
-		encolados[nodo.id] = false;
-		vector<Users> vecinos = *(vecinosDirectos(nodo));
+
+		// Se obtienen todos los vertices adyacentes de s
+		vector<int> vecinos = *(vecinosDirectos(s));
 		for(int i = 0; i < vecinos.size(); i++){
-			if(!visitados[vecinos[i].id] && !encolados[vecinos[i].id]){
+			if(datos.count(vecinos[i]) != 1){
+
+				// Se encola el vertice
 				cola.push(vecinos[i]);
-				encolados[vecinos[i].id] = true;
+
+				// Vertices se marcan como visitados y se le agregan los atributos
+				if (users[vecinos[i]].influencer = true) datos[vecinos[i]] = vector<int> {s, datos.at(s)[1] + 1, datos.at(s)[2] + 1};
+				else datos[vecinos[i]] = vector<int> {s, datos.at(s)[1] + 1, datos.at(s)[2]};
+
+				// Se van guardando los vectices padres e hijos en su nivel correspondiente
+				nivel[datos.at(s)[1] + 1].push_back(make_pair(s,vecinos[i]));
+			}
+
+			// Se considera el camino con mayor influencers en caso de que dos vertices con mismo orden lleguen al siguiente vertice
+			else{
+				// Se ingresa al nivel iterado
+				for(auto& elem: nivel.at(datos.at(s)[1])){
+
+					// Se busca al vertice que ya tenia padre
+					if(elem.second == vecinos[i]){
+
+						// Se ingresa al padre anterior y se compara el orden con el padre actual
+						if (datos.at(elem.first)[1] == datos.at(s)[1]){
+
+							// Se compara la cantidad de seguidores entre los padres del vertice iterado
+							if (datos.at(elem.first)[2] < datos.at(s)[2]){
+
+								// Como ingreso al if, el usuario debe ser influencer
+								// Se actualizan los valores del padre hacia el vertice iterado
+								if (users[vecinos[i]].influencer = true) datos[vecinos[i]] = vector<int> {s, datos.at(s)[1] + 1, datos.at(s)[2] + 1};
+								else datos[vecinos[i]] = vector<int> {s, datos.at(s)[1] + 1, datos.at(s)[2]};
+								elem.first = s;
+							}
+							break;
+						}
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -140,7 +180,7 @@ void LinkedGraph::printListOut(){
 	for(int i = 0; i < nodos; i++){
 		cout << users[i].name << ": ";
 		for(int j = 0; j < lista_out[i].size(); j++){
-			cout << lista_out[i][j].name << " - ";
+			cout << lista_out[i][j] << " - ";
 		}
 		cout << endl;
 	}
@@ -150,7 +190,7 @@ void LinkedGraph::printListIn(){
 	for(int i = 0; i < nodos; i++){
 		cout << users[i].name << ": ";
 		for(int j = 0; j < lista_in[i].size(); j++){
-			cout << lista_in[i][j].name << " - ";
+			cout << lista_in[i][j] << " - ";
 		}
 		cout << endl;
 	}
