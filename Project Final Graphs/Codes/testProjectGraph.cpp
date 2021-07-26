@@ -1,28 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "libs/projectGraphMatrix.hpp"
 #include "libs/ProjectGraphList.hpp"
-/*
-// Los usuarios se crean en base a esta estructura
-struct Users{
-    int id;
-    int name;
-    int followee; // Seguidos
-	int follower; // Seguidores
-	bool influencer; // True si el usuario es influencer
-	int num_influencers; // Cantidad de influencers en el 
-
-    // Inicializo las variables de la estructura
-    Users(int id, int name, int followee, int follower, bool influencer, int num_influencers) 
-		: id(id), name(name), followee(0), follower(0), influencer(false), num_influencers(0) 
-	{	
-	}
-};
-*/
 
 // Cantidad de nodos
-int cant_nodos = 11;
+int cant_nodos = 41858;
 
 using namespace std;
 
@@ -68,6 +50,7 @@ int main(int argc, char* argv[]){
         follower_count = atoi(aux_follower.c_str());
         followee_count = atoi(aux_followee.c_str());
  
+        // Seguidor y seguido
 		Users user_p(id_follower, follower, follower_count, followee_count);
 		Users user_q(id_followee, followee);
 
@@ -77,22 +60,14 @@ int main(int argc, char* argv[]){
     }
     file.close();
 
-	cout << "Out degree: " << endl;
-	users.printListOut();
-
-	cout << endl; 
-	cout << "In degree: " << endl;
-	users.printListIn();
-
+    // Ranking top 10: Influenciables e influencers
     users.ranking();
-    users.recorrerUsers();
 
-    cout << endl; 
-    cout << "Tendencia politica: " << endl;
-    cout << endl; 
-
+    // Porcentaje de tendencias politicas de cada usuario
     users.tendenciaPolitica();
 
+    // Componentes fuertemente conexas en grafo
+    users.SCC(); 
 
 	return 0;
 }

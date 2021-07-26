@@ -1,6 +1,6 @@
 CPP=g++
 
-OBJECTS=libs/projectGraphMatrix.o libs/projectGraphList.o\
+OBJECTS=libs/projectGraphList.o\
 		
 BINS=testProjectGraph\
 		
