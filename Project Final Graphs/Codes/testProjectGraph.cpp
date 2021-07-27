@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "libs/ProjectGraphList.hpp"
+#include "libs/projectGraphList.hpp"
 
 // Cantidad de nodos
 int cant_nodos = 41858;

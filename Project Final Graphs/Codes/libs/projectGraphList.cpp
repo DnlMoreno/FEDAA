@@ -1,5 +1,5 @@
 #include <fstream>
-#include "ProjectGraphList.hpp"
+#include "projectGraphList.hpp"
 #define NIL -1
 
 /************************************/
@@ -95,6 +95,7 @@ LinkedGraph::LinkedGraph(int nodos){
 
 LinkedGraph::~LinkedGraph(){
 	delete [] lista_out;
+	delete [] lista_in;
 }
 
 bool LinkedGraph::insertar(Users p, Users q){
@@ -177,13 +178,18 @@ void LinkedGraph::SCC(){
 
 	//file << "COMPONENTES_FUERTEMENTE_CONEXAS" << endl;
 
-	// Se visitan todos los nodos que no han sido visitados
+	// Se visitan todos los nodos que no han sido visitados, comenzando del nodo 0.
     for (int i = 0; i < nodos; i++){
         if (disc[i] == NIL){ 		//disc también actúa como una matriz visitada, marcando si ha sido visitado 
             __SCCUtil(i, disc, low,time, stackMember,stk, file); 
         }
     }
 	file.close();
+
+	// Liberación de memoria
+	delete [] disc;
+	delete [] low;
+	delete [] stackMember;
 } 
 
 void LinkedGraph::printListOut(){
@@ -422,34 +428,40 @@ void LinkedGraph::__porcentajeTendencias(unordered_map<int, vector<int>> &datos,
 }
 
 void LinkedGraph::__SCCUtil(int u, int disc[], int low[], int &time, bool stackMember[], stack<int>&stk, ofstream &file){
+	// Disc almacena el orden de los vertices en el primer recorrido en profundidad
+	// low almacena el orden mas pequeño de los antecesores que el nodo u pueda alcanzar
 	disc[u] = low[u] = ++time;	  
-	stk.push(u);
-	stackMember[u] = true;	// 
+	stk.push(u); // Guarda el nodo actual y sus antecesores hasta que se encuentra una componente fuertemente conexa 
+	stackMember[u] = true;	// Guarda los nodos apilados
 	
+	// Se obtienen todos los vertices adyacentes de u
 	vector<int> vecinos = *(vecinosDirectos(u));
     int v;
 
 	for(int i = 0; i < vecinos.size(); i++){
 		v = vecinos[i];
 		if(disc[v] == -1){
+			// Recursion hasta encontrar la componente fuertemente conexa
 			__SCCUtil(v,disc,low,time,stackMember,stk, file);
-			low[u] = min(low[u], low[v]);		
+			low[u] = min(low[u], low[v]); // Se guarda el de orden minimo
 		}
-		else if(stackMember[v] == true){		//v is the ancestor of u
-			low[u] = min(low[u], disc[v]);		//It can be changed to low[u] = disc[v]
+		else if(stackMember[v] == true){		// v es el antecesor de u
+			low[u] = min(low[u], disc[v]);		
 		}
 	}
 
 	int w = 0;
-	if(low[u] == disc[u]){	//Found a strong connected component, 
-			//u is the root of the DFS subtree where the strong connected component is located 
-		while(stk.top() != u){	//You can only use u as the root, not the entire stack 
+	// Se encontro una componente fuertemente conexa
+	if(low[u] == disc[u]){
+			// u es la raíz del subárbol DFS donde se encuentra la componente fuertemente conexa
+		while(stk.top() != u){	// Se obtiene sacan los elemetos hasta u, no toda la pila 
 			w = (int) stk.top();
 			file << users[w].name << ";";
 			stackMember[w] = false; 
 			stk.pop();
 		}
-		w = (int) stk.top();  // u 
+		// Se desapila el ultimo valor (u)
+		w = (int) stk.top();
 		file << users[w].name << endl;
 		stackMember[w] = false; 
 		stk.pop();
