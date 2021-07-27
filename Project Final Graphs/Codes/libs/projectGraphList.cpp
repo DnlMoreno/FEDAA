@@ -271,7 +271,7 @@ void LinkedGraph::__BFSmodificado(int s, ofstream &file){
 
 	// Permite hacer comparaciones por nivel
 	// Key = id del vertice
-	// El vector guarda al padre e hijo.
+	// El vector guarda al padre e hijo
 	unordered_map<int, vector<pair<int, int>> > nivel;
 
 	// Se encola y se marca el vertice de origen como visitado
