@@ -12,6 +12,8 @@
         "utility": "cpp",
         "ostream": "cpp",
         "list": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "vector": "cpp",
+        "chrono": "cpp"
     }
 }

@@ -76,6 +76,7 @@ public:
 	// Constructor y destructor
 	LinkedGraph(int nodos);
 	~LinkedGraph();
+	int getCantidad();
 
 	// Metodos esenciales
 	bool insertar(Users p, Users q);
@@ -92,10 +93,6 @@ private:
 	vector<int>* lista_out; // Lista que contiene los out_degree de cada vertice
 	vector<int>* lista_in; // Lista que contiene los in_degree de cada vertice
 	vector<Users> users; // Vector que tiene a los usuarios ordenados por indice
-
-	// Ordena a los infuencer e influenciables
-	priority_queue<Users, vector<Users>, CompareIn> Influencers;
-	priority_queue<Users, vector<Users>, CompareOut> Influenciables;
 
 	// Metodos internos
 	void __ranking();

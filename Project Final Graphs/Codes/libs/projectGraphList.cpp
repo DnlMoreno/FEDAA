@@ -98,6 +98,11 @@ LinkedGraph::~LinkedGraph(){
 	delete [] lista_in;
 }
 
+int LinkedGraph::getCantidad(){
+	return nodos;
+}
+
+
 bool LinkedGraph::insertar(Users p, Users q){
 	if(p.id >= nodos || q.id >= nodos) return false; // Fuera de rango
 	for(int i = 0; i < lista_out[p.id].size(); i++){
@@ -229,6 +234,10 @@ void LinkedGraph::__ranking(){
 	file.open("Top_10_influyentes_e_influenciables.txt", ios::out);
 	file << "************** RANKING TOP 10 **************" << endl;
 
+	// Ordena a los infuencer e influenciables
+	priority_queue<Users, vector<Users>, CompareIn> Influencers;
+	priority_queue<Users, vector<Users>, CompareOut> Influenciables;
+
 	// Se rellenan las priority queue
 	for(unsigned i=0; i<users.size(); i++){
 		Influencers.push(users[i]);
@@ -244,6 +253,8 @@ void LinkedGraph::__ranking(){
         // Impresion de salida
 		file << i << " - Usuario: " << aux.name << "; Seguidos: "<< aux.out_degree << endl; 
 	}
+
+	// Tamaño priority queue
 
 	file << "\nInfluyentes" << endl;
 	for(unsigned i=0; i<users_influencers; i++){
@@ -453,8 +464,8 @@ void LinkedGraph::__SCCUtil(int u, int disc[], int low[], int &time, bool stackM
 	int w = 0;
 	// Se encontro una componente fuertemente conexa
 	if(low[u] == disc[u]){
-			// u es la raíz del subárbol DFS donde se encuentra la componente fuertemente conexa
-		while(stk.top() != u){	// Se obtiene sacan los elemetos hasta u, no toda la pila 
+		// u es la raíz del subárbol DFS donde se encuentra la componente fuertemente conexa
+		while(stk.top() != u){	// Se sacan los elemetos hasta u, no toda la pila 
 			w = (int) stk.top();
 			file << users[w].name << ";";
 			stackMember[w] = false; 
