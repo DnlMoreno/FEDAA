@@ -4,7 +4,7 @@ _Fecha de implementación:_ **$1^{er}$ _semestre 2021_**
 
 Todos los códigos fueron implementados en C++. Para los gráficos y análisis de resultados se utilizó Jupyter Notebook.
 
-- **Tarea No. 1:** Evaluación experimental de algoritmos de ordenamiento y multiplicación de matrices.
+- **Trabajo No. 1:** Evaluación experimental de algoritmos de ordenamiento y multiplicación de matrices.
 
 - **Trabajo No. 2:** Ejercicios de programación competitiva con TDAs de Bibliotecas estándar.
 
