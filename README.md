@@ -1,5 +1,7 @@
 # Fundamentos de estructuras de datos y algoritmos
 
+*Fecha de implementación: $1^{er}$ semestre 2021
+
 Todos los códigos fueron implementados en C++. Para los gráficos y análisis de resultados se utilizó Jupyter Notebook.
 
 - **Tarea No. 1:** Evaluación experimental de algoritmos de ordenamiento y multiplicación de matrices.
