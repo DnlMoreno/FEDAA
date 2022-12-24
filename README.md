@@ -1,6 +1,6 @@
 # Fundamentos de estructuras de datos y algoritmos
 
-_Fecha de implementación: $1^{er}$ semestre 2021_
+_Fecha de implementación:_ $1^{er}$ _semestre 2021_
 
 Todos los códigos fueron implementados en C++. Para los gráficos y análisis de resultados se utilizó Jupyter Notebook.
 
