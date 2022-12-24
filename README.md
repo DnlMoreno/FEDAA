@@ -1,7 +1,7 @@
 # Fundamentos de estructuras de datos y algoritmos
 
 ### Trabajo No. 1: 
-- Evaluación experimental de algoritmos de ordenamiento y multiplicación de matrices.
+Evaluación experimental de algoritmos de ordenamiento y multiplicación de matrices.
 
 ### Trabajo No. 2: 
 - Ejercicios de programación competitiva con TDAs de Bibliotecas estándar.
