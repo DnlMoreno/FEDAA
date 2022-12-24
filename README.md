@@ -1,5 +1,7 @@
 # Fundamentos de estructuras de datos y algoritmos
 
+### Curso del Magíster en Ciencias de la Computación UdeC
+
 _Fecha de implementación:_ **$1^{er}$ _semestre 2021_**
 
 Todos los códigos fueron implementados en C++. Para los gráficos y análisis de resultados se utilizó Jupyter Notebook.
