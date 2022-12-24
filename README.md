@@ -2,8 +2,7 @@
 
 Todos los códigos fueron implementados en C++. Para los gráficos y análisis de resultados se utilizó Jupyter Notebook.
 
-### Trabajo No. 1: 
-Evaluación experimental de algoritmos de ordenamiento y multiplicación de matrices.
+**Tarea No. 1:** Evaluación experimental de algoritmos de ordenamiento y multiplicación de matrices.
 
 ### Trabajo No. 2: 
 Ejercicios de programación competitiva con TDAs de Bibliotecas estándar.
